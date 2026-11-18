@@ -59,9 +59,21 @@ Elementos (`type`):
 - `emoji` — ilustración (Noto Emoji, libre): `char, x, y, size, t, t_end?, anim` (`float|spin|bounce|shake|pulse|wiggle`),
   opcional `to: [x2, y2]` + `move` (segundos) para desplazarse. **Usar 2–4 emojis por escena relacionados al tema.**
 - `meme` — foto de reacción en tarjeta con zoom de golpe: `tag, x, y, size (360–440), t, t_end?, rot`.
-  Tags disponibles (assets/memes): shock_gato, grito_gato, feliz_perro, pensando_mono, sorprendido_mono,
-  mirada_seria_gato, curioso_gato, triste_perro, enojado_gato, furioso_gato, burlon_gato, aburrido_gato,
-  sospecha_perro, desanimado_perro. Usar 2–3 memes por video en los momentos de reacción.
+  Usar 2–3 memes por video en los momentos de reacción, **acompañados de un sonido de la misma emoción**,
+  y no repetir los memes del video anterior. Tags disponibles (assets/memes), por emoción → sonidos que combinan:
+
+  | Emoción | Memes | Sonidos que combinan |
+  |---|---|---|
+  | Shock / sorpresa | shock_gato, buho_ojos, hamster_sorprendido, sorprendido_mono, gato_intenso | vine_boom, gasp, oh_my_god, anime_wow, boom_dramatico |
+  | Grito / exagerado | grito_gato, gato_grito_bostezo, gatitos_grito | faaah, airhorn, violin_chirrido, ninos_woah |
+  | Duda / sospecha | pensando_mono, curioso_gato, hamster_curioso, mapache_sospecha, sospecha_perro | huh_gato, huh_pregunta, what, suspenso |
+  | Juzgando / serio | mirada_seria_gato, cabra_juzgando, bulldog_serio, gato_negro_misterio | dun_dun_dun, reloj_tictac, glitch |
+  | Risa / burla | gato_riendo, burlon_gato, lengua_gato, cachorro_lengua, perro_sonrisa_incomoda | risa_gato, risas_sitcom, bocina_goofy, cachetada_oh |
+  | Feliz / celebración | feliz_perro, perrito_sonriente, cachorro_feliz, cabra_feliz, loro | yippee, tada, aplausos, caja_registradora, ninos_wow |
+  | Enojo | enojado_gato, furioso_gato, perro_grunendo, perro_furioso, rana_enojada | buzzer_fuerte, tubo_metal, punch |
+  | Triste / decepción | triste_perro, desanimado_perro, aburrido_gato, gato_atrapado | trombon_triste, publico_decepcion, error_buzzer, aww |
+  | Calma / descanso / lento | mono_relajado, perezoso_feliz | ronquido, pop, burbuja_pop |
+  | Huir / rápido | husky_corriendo | run_vine, silbato_slide, riser |
 - `meter` — barra que sube/baja: `label, x, y, w, t, from, to, t0, t1, color`.
 - `counter` — número que cuenta: `from, to, dur, prefix?, suffix?, decimals?, size, color, x, y, t`.
 - `qmarks` (signos ? girando), `confetti`, `burst` (rayos), `shake` (sacudida), `rings` (ondas),
