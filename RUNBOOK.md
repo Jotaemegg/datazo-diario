@@ -68,10 +68,23 @@ Elementos (`type`):
   `clock`, `brain`, `face` (`mood: neutral|laugh`), `button` (`text: "SÍGUENOS"`).
 - Escena final: emoji 😂 o 🤯 + `words` "Un dato curioso / CADA DÍA" + `button` + `confetti`.
 
-Sonidos (`sfx`, nombres en assets/sfx): vine_boom, huh_gato, huh_hombre, boing, ding, risa_gato,
-risas_sitcom, scratch_disco, faaah, bruh. Volumen 0.45–0.8. `trim` (s) para cortar los largos.
-**No usar bruh** (al dueño no le gustó). Poner sonidos en pausas de la voz, no encima de frases clave.
-Los whooshes entre escenas y la música se agregan solos.
+Sonidos (`sfx`, nombres en assets/sfx; `python fetch_assets.py` los descarga con volumen igualado):
+
+| Momento | Opciones |
+|---|---|
+| Dato fuerte / revelación | vine_boom, boom_dramatico, dun_dun_dun, dun_dun_brass, airhorn, tubo_metal, anime_wow |
+| Sorpresa / asombro | gasp, ninos_woah, ninos_wow, oh_my_god, aww, yippee |
+| Duda / confusión | huh_gato, huh_hombre, huh_pregunta, what |
+| Error / mito falso | error_buzzer, buzzer_fuerte, trombon_triste, publico_decepcion, scratch_disco |
+| Humor / golpe | bonk, boing, cachetada_oh, punch, hueso_crack, bocina_goofy, violin_chirrido, silbato_slide |
+| Risa / celebración | risa_gato, risas_sitcom, aplausos (trim 2), tada, caja_registradora, faaah |
+| Tensión / antes de revelar | suspenso, riser, reloj_tictac (trim 2), redoble (trim 2.5), glitch |
+| Detalle / transición suave | pop, burbuja_pop, ding, camara (trim 0.6), ronquido (para dormir/descanso), run_vine (trim 2, huida) |
+
+**Variedad (obligatorio):** 4–6 sonidos por video, de al menos 3 categorías distintas; máximo un
+vine_boom por video y no repetir la misma combinación del video anterior (revisa el último spec en videos/).
+Volumen 0.4–0.7. `trim` (s) para cortar los largos. **No usar bruh** (al dueño no le gustó).
+Poner sonidos en pausas de la voz, no encima de frases clave. Los whooshes entre escenas y la música se agregan solos.
 
 ## 7. Revisar y renderizar
 ```bash
