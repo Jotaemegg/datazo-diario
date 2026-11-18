@@ -74,6 +74,13 @@ Elementos (`type`):
   | Triste / decepción | triste_perro, desanimado_perro, aburrido_gato, gato_atrapado | trombon_triste, publico_decepcion, error_buzzer, aww |
   | Calma / descanso / lento | mono_relajado, perezoso_feliz | ronquido, pop, burbuja_pop |
   | Huir / rápido | husky_corriendo | run_vine, silbato_slide, riser |
+- `mascota` — **Inspector Bigotes**, el gato detective de la cuenta (original, sin copyright): `tag, x, y, size (420–560), t, t_end?, anim (bob|shake|bounce|pulse), flip?, rot?`.
+  Aparece en **todos** los videos (1–2 veces): en el gancho inicial y/o en la reacción al dato fuerte; puede reemplazar a un meme.
+  Expresiones (assets/mascota) → sonido que combina:
+  shock → vine_boom/gasp · grito → faaah/airhorn · duda → huh_gato/what · sospecha → suspenso/dun_dun_dun ·
+  serio → reloj_tictac/glitch · risa → risa_gato/risas_sitcom · feliz → yippee/tada · enojo → buzzer_fuerte/tubo_metal ·
+  triste → trombon_triste/aww · dormido → ronquido · eureka → ding/anime_wow · pensando → reloj_tictac/burbuja_pop.
+  Ponerlo en la mitad inferior (y≈1250–1400) para no tapar el texto. No repetir la misma expresión del video anterior.
 - `meter` — barra que sube/baja: `label, x, y, w, t, from, to, t0, t1, color`.
 - `counter` — número que cuenta: `from, to, dur, prefix?, suffix?, decimals?, size, color, x, y, t`.
 - `qmarks` (signos ? girando), `confetti`, `burst` (rayos), `shake` (sacudida), `rings` (ondas),

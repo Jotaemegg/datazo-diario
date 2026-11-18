@@ -335,6 +335,18 @@ def meme(tag, size):
         _meme_cache[k] = meme_card(p, size)
     return _meme_cache[k]
 
+_masc_cache = {}
+def mascota(tag, size, flip=False):
+    k = (tag, size, flip)
+    if k not in _masc_cache:
+        im = Image.open(os.path.join(ASSETS, "mascota", tag + ".png")).convert("RGBA").resize((size, size), Image.LANCZOS)
+        if flip: im = im.transpose(Image.FLIP_LEFT_RIGHT)
+        pad = 30; out = Image.new("RGBA", (size + 2 * pad, size + 2 * pad), (0, 0, 0, 0))
+        shd = Image.new("RGBA", out.size, (0, 0, 0, 0)); shd.paste((0, 0, 0, 130), (pad + 8, pad + 14), im)
+        out = Image.alpha_composite(out, shd.filter(ImageFilter.GaussianBlur(12))); out.alpha_composite(im, (pad, pad))
+        _masc_cache[k] = out
+    return _masc_cache[k]
+
 def life(t, e):
     """alpha de entrada/salida de un elemento con t (inicio) y t_end (fin opcional)."""
     t0 = e.get("t", 0); t1 = e.get("t_end", 1e9)
@@ -367,6 +379,16 @@ def draw_el(fr, e, t):
         elif anim == "pulse": sc *= 1 + 0.12 * math.sin(lt * 7)
         elif anim == "wiggle": rot = 25 * math.sin(lt * 9)
         paste_center(fr, emoji_sprite(e["char"], e.get("size", 220)), x + dx, y + dy, sc, p * o, rot)
+    elif ty == "mascota":
+        p, o = life(t, e)
+        if p <= 0: return
+        lt = t - e.get("t", 0); anim = e.get("anim", "bob")
+        dx = dy = 0; rot = e.get("rot", 0); sc = ease_out_back(p, 2.0)
+        if anim == "bob": dy = 12 * math.sin(lt * 4); rot += 3 * math.sin(lt * 2.5)
+        elif anim == "shake": dx = 12 * math.sin(lt * 45) * max(0, 1 - lt / 0.8); rot += 4 * math.sin(lt * 30)
+        elif anim == "bounce": dy = -abs(math.sin(lt * 7)) * 40
+        elif anim == "pulse": sc *= 1 + 0.07 * math.sin(lt * 9)
+        paste_center(fr, mascota(e["tag"], e.get("size", 460), e.get("flip", False)), x + dx, y + dy, sc, p * o, rot)
     elif ty == "meme":
         meme_pop(fr, meme(e["tag"], e.get("size", 420)), x, y, t, e.get("t", 0), e.get("t_end", 99), e.get("rot", -4))
     elif ty == "meter":
