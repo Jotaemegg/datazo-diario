@@ -137,3 +137,16 @@ python engine.py hoy/spec.json hoy/video.mp4
   (#datoscuriosos #sabiasque #ciencia + del tema), la **fuente del dato** y el **cuadro sugerido para la portada**.
 - Al final del mensaje incluir la línea para el historial: `AAAA-MM-DD | tema | fuente`
   (la sesión programada no puede hacer push; José Miguel o Claude la agregan después).
+
+### Límite de Metricool (plan gratis: 20 publicaciones al mes, cada red cuenta 1 → un video en IG+TikTok+YouTube = 3)
+- Mira la sección **Metricool** de `historial.md` (uso del mes) y súmale 3 por cada video del mes que aparezca después.
+  El contador vuelve a 0 el día 1 de cada mes.
+- Si con el video de hoy **se pasaría de 20**, escribe al inicio del mensaje: **"⚠️ Se acabó el límite de Metricool este mes:
+  hoy toca publicar a mano"** y agrega este paso a paso:
+  1. **Instagram** (app): + → Reel → elegir el video → portada: el cuadro sugerido → pegar descripción y los 5 hashtags →
+     Configuración avanzada → activar "Etiqueta de IA" → Compartir.
+  2. **TikTok** (app): + → Subir → elegir el video → Siguiente → pegar descripción + hashtags → Portada →
+     Más opciones → activar "Contenido generado por IA" → Publicar.
+  3. **YouTube** (app): + → Video corto → elegir el video → título (máx. 100 caracteres) → descripción →
+     Audiencia: "No, no es contenido para niños" → "Contenido alterado o sintético": Sí → Subir video corto.
+- Si quedan **3–5 publicaciones**, avisa en el mensaje: "Quedan X publicaciones de Metricool este mes".
