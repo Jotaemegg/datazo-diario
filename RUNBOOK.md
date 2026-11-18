@@ -42,6 +42,13 @@ Da los tramos de voz separados por pausas. Asignar cada frase a su tramo; cada e
 inicio de su primera frase hasta el inicio de la siguiente escena (la 1.ª empieza en 0).
 Los tiempos `t` de los elementos son **relativos a la escena**; los de `sfx` son **globales**.
 
+## 6a. Storyboard (criterio de Motion Architect)
+Antes del spec, escribe en `hoy/storyboard.md` una línea por escena:
+**Hook (0–3 s)** → **Revelación** → **1–2 highlights** (uno por escena, concreto: "el contador sube a 20 %") → **Remate + cierre**.
+- El hook debe entenderse **en silencio** (texto grande + imagen en el primer segundo).
+- Una sola idea por escena; una sola cosa se mueve "en grande" a la vez; el orden de entrada = orden de lectura.
+- Todo texto debe quedarse en pantalla al menos 1 s + 0.1 s por letra.
+
 ## 6. Escribir `hoy/spec.json`
 Ver `test/spec.json` como ejemplo completo. Estructura:
 ```json
@@ -52,9 +59,18 @@ Ver `test/spec.json` como ejemplo completo. Estructura:
 Colores: `W` blanco, `Y` amarillo, `P` rosa, `C` cian, `G` gris. Zona segura: x 80–1000, y 150–1550
 (abajo y a la derecha está la interfaz de TikTok/IG). Tamaños de texto ya se reducen al 80 % internamente.
 
+Movimiento por escena (motor v5):
+- Transiciones automáticas entre escenas (rotan `zoom` → `slide` → `whip`; la primera abre con `flash`).
+  Puedes forzar una con `"in": "zoom|slide|whip|cut"` en la escena. Varía: no repitas la misma 3 veces seguidas.
+- `"punch": [t, ...]` (tiempos locales de la escena): golpe de zoom de cámara. **Ponlo exactamente donde suena
+  un efecto fuerte** (vine_boom, boom_dramatico, airhorn, dato numérico). 1–2 por video, máximo uno por escena.
+- `"drift": 0.03` (defecto): zoom lento para que la toma nunca esté congelada.
+
 Elementos (`type`):
-- `words` — bloque de texto que aparece palabra por palabra: `y`, `lines: [[[palabra, tamaño, color, t], ...], ...]`.
-  Títulos ~84–92, palabra clave 120–150, secundarias ~70.
+- `words` — bloque de texto que aparece palabra por palabra: `y`, `lines: [[[palabra, tamaño, color, t, estilo?], ...], ...]`.
+  Títulos ~84–92, palabra clave 120–150, secundarias ~70. Estilo (opcional): `pop` (defecto: sube y aparece),
+  `slam` (cae desde grande; automático si tamaño ≥ 130), `box` (tarjeta de color detrás, texto oscuro).
+  **Usa `box` en 1–2 palabras clave por video** (el número o la palabra del dato), en color Y, P o C.
 - `text` — un texto suelto con pop: `text, size, color, x, y, t, t_end?, wobble?`.
 - `emoji` — ilustración (Noto Emoji, libre): `char, x, y, size, t, t_end?, anim` (`float|spin|bounce|shake|pulse|wiggle`),
   opcional `to: [x2, y2]` + `move` (segundos) para desplazarse. **Usar 2–4 emojis por escena relacionados al tema.**
@@ -108,7 +124,9 @@ Poner sonidos en pausas de la voz, no encima de frases clave. Los whooshes entre
 ## 7. Revisar y renderizar
 ```bash
 python engine.py hoy/spec.json hoy/prev.png --preview 1.5,6,12,18,24     # tiempos globales
-# mirar prev.png (Read): textos dentro de zona segura, nada encimado
+# mirar prev.png (Read) con este checklist:
+#  - ¿el primer frame (t≈0.4) ya engancha sin audio?   - ¿algún texto encimado o fuera de zona segura?
+#  - ¿cada punch coincide con su sonido?               - ¿hay alguna escena con más de una cosa grande moviéndose?
 python engine.py hoy/spec.json hoy/video.mp4
 ```
 

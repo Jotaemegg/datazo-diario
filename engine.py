@@ -25,6 +25,9 @@ def ease_out_back(p, s=1.7):
     p -= 1; return p * p * ((s + 1) * p + s) + 1
 def ease_out(p): return 1 - (1 - p) ** 3
 def ease_io(p): return 3 * p * p - 2 * p * p * p
+def ease_out5(p): return 1 - (1 - clamp(p)) ** 5          # ~bezier(0.23,1,0.32,1): entradas
+def ease_in3(p): p = clamp(p); return p * p * p             # salidas
+def snappy(p): return 0.9 + 0.1 * ease_out_back(clamp(p), 1.25)  # spring con un solo rebote mínimo
 
 _font_cache = {}
 def font(size, bold=True):
@@ -62,24 +65,45 @@ def paste_center(frame, sprite, cx, cy, scale=1.0, alpha=1.0, rot=0.0):
         s = s.copy(); s.putalpha(a)
     frame.alpha_composite(s, (int(cx - s.width / 2), int(cy - s.height / 2)))
 
+DARK = (20, 16, 42)
 def words_block(frame, lines, t, cy, gap=10):
-    """lines: [[(texto, size, color, t0), ...], ...] — cada palabra 'salta' al aparecer."""
+    """lines: [[(texto, size, color, t0[, estilo]), ...], ...]
+    estilo: pop (defecto) | slam (cae grande, para la palabra clave) | box (tarjeta de color detrás).
+    Palabras de size >= 130 usan slam automáticamente."""
     heights = []
     for line in lines:
-        heights.append(max(text_sprite(w, s, c).height for w, s, c, _ in line) - 40)
+        heights.append(max(text_sprite(w[0], w[1], w[2]).height for w in line) - 40)
     total_h = sum(heights) + gap * (len(lines) - 1)
     y = cy - total_h / 2
     for line, lh in zip(lines, heights):
-        sprites = [text_sprite(w, s, c) for w, s, c, _ in line]
+        sprites = [text_sprite(w[0], w[1], w[2]) for w in line]
         space = 22
-        lw = sum(sp.width - 60 for sp in sprites) + space * (len(sprites) - 1)
+        extra = [40 if len(w) > 4 and w[4] == "box" else 0 for w in line]
+        lw = sum(sp.width - 60 + ex for sp, ex in zip(sprites, extra)) + space * (len(sprites) - 1)
         x = W / 2 - lw / 2
-        for (w, s, c, t0), sp in zip(line, sprites):
-            p = clamp((t - t0) / 0.32)
-            ww = sp.width - 60
+        for w, sp, ex in zip(line, sprites, extra):
+            txt, s, c, t0 = w[:4]
+            x += ex / 2
+            style = w[4] if len(w) > 4 else ("slam" if s >= 130 else "pop")
+            ww = sp.width - 60; cx = x + ww / 2; cyw = y + lh / 2
+            p = (t - t0)
             if p > 0:
-                paste_center(frame, sp, x + ww / 2, y + lh / 2, ease_out_back(p), clamp(p * 2))
-            x += ww + space
+                if style == "slam":
+                    q = clamp(p / 0.26)
+                    sc = 1 + 0.75 * (1 - ease_out5(q))
+                    paste_center(frame, sp, cx, cyw, sc, clamp(q * 3))
+                elif style == "box":
+                    q = clamp(p / 0.24); bw = ww + 36
+                    d = ImageDraw.Draw(frame); bh = sp.height - 50
+                    x0 = cx - bw / 2
+                    d.rounded_rectangle((x0, cyw - bh / 2, x0 + max(24, bw * ease_out5(q)), cyw + bh / 2), 18, fill=c + (255,))
+                    if p > 0.1:
+                        q2 = clamp((p - 0.1) / 0.3)
+                        paste_center(frame, text_sprite(txt, s, DARK, shadow=False), cx, cyw + 22 * (1 - ease_out5(q2)), snappy(q2), clamp(q2 * 3))
+                else:
+                    q = clamp(p / 0.42)
+                    paste_center(frame, sp, cx, cyw + 36 * (1 - ease_out5(q)), snappy(q), clamp(q * 2.5))
+            x += ww + space + ex / 2
         y += lh + gap
 
 # ---------- fondo ----------
@@ -357,7 +381,7 @@ def life(t, e):
 def draw_el(fr, e, t):
     ty = e["type"]; x = e.get("x", W / 2); y = e.get("y", 960)
     if ty == "words":
-        lines = [[(w[0], w[1], col(w[2]), w[3]) for w in ln] for ln in e["lines"]]
+        lines = [[(w[0], w[1], col(w[2]), w[3], *w[4:]) for w in ln] for ln in e["lines"]]
         words_block(fr, lines, t, y)
     elif ty == "text":
         p, o = life(t, e)
@@ -421,19 +445,81 @@ def draw_el(fr, e, t):
             d.rounded_rectangle((x - bw / 2, y - bh / 2, x + bw / 2, y + bh / 2), 70, fill=col(e.get("color", "P")) + (255,))
             if q > 0.6: paste_center(fr, text_sprite(e.get("text", "SÍGUENOS"), 72, WHITE), x, y, 1 + 0.03 * math.sin(t * 8), clamp((q - 0.6) / 0.4))
 
+TRANS = ["zoom", "slide", "whip"]
+TD = 0.34   # duración de transición entre escenas (s)
+
+def camera(fr, z=1.0, dx=0.0, dy=0.0, blur=0.0, layer=False, alpha=1.0):
+    """Mueve la 'cámara' sobre el frame. layer=True devuelve capa transparente (para mezclar dos escenas)."""
+    if abs(z - 1) > 0.002 or abs(dx) > 0.5 or abs(dy) > 0.5 or layer:
+        w2, h2 = int(W * z), int(H * z)
+        sc = fr.resize((w2, h2), Image.BILINEAR) if (w2, h2) != fr.size else fr
+        out = Image.new("RGBA", (W, H), (0, 0, 0, 0)) if layer else BG.copy()
+        out.paste(sc, (int((W - w2) / 2 + dx), int((H - h2) / 2 + dy)))
+        fr = out
+    if blur > 0.6: fr = fr.filter(ImageFilter.GaussianBlur(blur))
+    if alpha < 0.999:
+        fr = fr.copy(); fr.putalpha(fr.getchannel("A").point(lambda v: int(v * alpha)))
+    return fr
+
+def cam_state(sc, t):
+    """drift lento (la toma nunca está congelada) + punches de zoom sincronizados con sonidos."""
+    z = 1 + sc.get("drift", 0.03) * clamp(t / sc["dur"])
+    for pt in sc.get("punch", []):
+        if t >= pt:
+            k = t - pt; z += 0.075 * clamp(k / 0.05) * math.exp(-max(0, k - 0.05) / 0.16)
+    return z
+
+_last_cache = {}
+def last_content(sc, gt):
+    k = id(sc)
+    if k not in _last_cache:
+        fr = render_content(sc, sc["dur"] - 1 / FPS, gt)
+        _last_cache[k] = camera(fr, cam_state(sc, sc["dur"]), layer=True)
+    return _last_cache[k]
+
 def render_scene_frame(sc, t, gt):
+    fr = render_content(sc, t, gt)
+    z = cam_state(sc, t); tin = sc.get("in", "cut"); prev = sc.get("_prev")
+    q = clamp(t / TD); e = ease_out5(q); m = math.sin(math.pi * q)   # m: blur máximo a mitad
+    if prev is not None and q < 1 and tin in TRANS:
+        A = last_content(prev, gt)
+        if tin == "slide":
+            A = camera(A, 1, 0, -H * 0.9 * e, 12 * m, layer=True)
+            B = camera(fr, z, 0, H * 0.9 * (1 - e), 12 * m, layer=True)
+        elif tin == "whip":
+            A = camera(A, 1, -W * e, 0, 16 * m, layer=True)
+            B = camera(fr, z, W * (1 - e), 0, 16 * m, layer=True)
+        else:  # zoom: la escena vieja "atraviesa" la cámara y la nueva llega desde lejos
+            A = camera(A, 1 + 0.5 * e, 0, 0, 14 * m, layer=True, alpha=1 - e)
+            B = camera(fr, z * (0.82 + 0.18 * e), 0, 0, 10 * (1 - e), layer=True, alpha=clamp(q * 2))
+        out = BG.copy(); out.alpha_composite(A); out.alpha_composite(B); fr = out
+    else:
+        fr = camera(fr, z)
+        if tin == "flash" and t < 0.3:
+            fr = Image.blend(fr, Image.new("RGBA", fr.size, (255, 255, 255, 255)), 0.7 * (1 - ease_out5(t / 0.3)))
+    overlay(fr, gt)
+    return fr
+
+def render_content(sc, t, gt):
     fr = base_frame(gt)
     for e in sc.get("elements", []):
         if e["type"] != "shake": draw_el(fr, e, t)
     for e in sc.get("elements", []):
         if e["type"] == "shake" and t > e["t"]:
             fr = shake(fr, e.get("amount", 18) * (1 - clamp((t - e["t"]) / 0.5)), t)
-    overlay(fr, gt)
-    return fr if sc.get("last") else fade_out(t, sc["dur"], fr)
+    return fr
+
+def prep_scenes(scenes):
+    scenes[-1]["last"] = True
+    for i, sc in enumerate(scenes):
+        sc.setdefault("in", "flash" if i == 0 else TRANS[(i - 1) % len(TRANS)])
+    for i, sc in enumerate(scenes):
+        sc["_prev"] = scenes[i - 1] if i > 0 else None
+    return scenes
 
 def render_video(spec, out_video):
     global TOTAL, TAG
-    scenes = spec["scenes"]; scenes[-1]["last"] = True
+    scenes = prep_scenes(spec["scenes"])
     TOTAL = sum(s["dur"] for s in scenes); TAG = spec.get("tag", TAG)
     files = []; start = 0.0
     work = os.path.join(os.path.dirname(os.path.abspath(out_video)), "_work"); os.makedirs(work, exist_ok=True)
@@ -482,7 +568,7 @@ def mix_audio(spec, video_in, out_path, total):
 def preview(spec, times, out_png):
     """times: lista de tiempos GLOBALES; arma una hoja de contacto."""
     global TOTAL, TAG
-    scenes = spec["scenes"]; TOTAL = sum(s["dur"] for s in scenes); TAG = spec.get("tag", TAG)
+    scenes = prep_scenes(spec["scenes"]); TOTAL = sum(s["dur"] for s in scenes); TAG = spec.get("tag", TAG)
     ims = []
     for gt in times:
         s = 0.0
