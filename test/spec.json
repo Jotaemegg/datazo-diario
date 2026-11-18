@@ -1,0 +1,56 @@
+{
+ "tag": "DATO CURIOSO",
+ "voice": "voz.mp3",
+ "scenes": [
+  {"dur": 3.1, "elements": [
+    {"type": "qmarks", "t": 1.2, "y": 860},
+    {"type": "words", "y": 760, "lines": [[["¿Por",92,"W",0.0],["qué",92,"W",0.12],["NADIE",92,"P",0.24]],[["puede",92,"W",0.4],["hacerse",92,"W",0.55]],[["COSQUILLAS",150,"Y",0.75]],[["a",92,"W",1.05],["sí",92,"W",1.15],["mismo?",92,"W",1.25]]]},
+    {"type": "emoji", "char": "🤔", "x": 460, "y": 1260, "size": 200, "t": 1.4, "anim": "float"},
+    {"type": "emoji", "char": "🪶", "x": 680, "y": 1250, "size": 150, "t": 1.5, "anim": "wiggle"}
+  ]},
+  {"dur": 4.15, "elements": [
+    {"type": "words", "y": 400, "lines": [[["El",84,"W",0.0],["cerebro",84,"W",0.1]],[["PREDICE",120,"C",0.3]],[["su",70,"W",0.55],["propio",70,"W",0.65],["toque",70,"W",0.75]]]},
+    {"type": "rings", "x": 640, "y": 960, "t": 0.8},
+    {"type": "brain", "x": 540, "y": 860, "t": 0.4},
+    {"type": "meter", "x": 540, "y": 1250, "w": 640, "label": "intensidad de la sensación", "t": 1.1, "from": 1, "to": 0.15, "t0": 2.8, "t1": 3.7, "color": "Y"},
+    {"type": "emoji", "char": "🔉", "x": 150, "y": 1250, "size": 110, "t": 1.1, "anim": "pulse"},
+    {"type": "text", "text": "…y le baja el volumen", "size": 64, "x": 540, "y": 1390, "t": 2.8}
+  ]},
+  {"dur": 7.2, "elements": [
+    {"type": "words", "y": 400, "lines": [[["Si",84,"W",0.25],["OTRO",84,"P",0.4],["te",84,"W",0.55],["toca…",84,"W",0.7]],[["no",70,"W",2.25],["lo",70,"W",2.35],["puede",70,"W",2.45],["predecir",70,"C",2.65]]]},
+    {"type": "emoji", "char": "😐", "x": 660, "y": 900, "size": 220, "t": 0.6, "t_end": 2.8},
+    {"type": "emoji", "char": "🪶", "x": 210, "y": 900, "to": [470, 900], "move": 1.6, "size": 150, "t": 0.8, "t_end": 2.8, "anim": "wiggle"},
+    {"type": "meme", "tag": "shock_gato", "x": 540, "y": 900, "size": 420, "t": 3.0, "t_end": 3.95},
+    {"type": "burst", "x": 540, "y": 900, "t": 4.0},
+    {"type": "text", "text": "SORPRESA", "size": 150, "color": "Y", "x": 540, "y": 820, "t": 4.0, "wobble": 3},
+    {"type": "text", "text": "=", "size": 110, "x": 540, "y": 950, "t": 4.7},
+    {"type": "text", "text": "COSQUILLAS", "size": 130, "color": "P", "x": 540, "y": 1080, "t": 5.35, "wobble": 3},
+    {"type": "meme", "tag": "grito_gato", "x": 540, "y": 1360, "size": 360, "t": 5.35, "rot": 5},
+    {"type": "shake", "t": 4.0}
+  ]},
+  {"dur": 11.2, "elements": [
+    {"type": "words", "y": 380, "lines": [[["EXPERIMENTO:",64,"Y",0.0]],[["un",72,"W",1.45],["robot",72,"C",1.6],["imita",72,"W",1.8],["el",72,"W",1.95]],[["movimiento",72,"W",2.1],["con",72,"W",2.4],["pluma",72,"W",2.6]]]},
+    {"type": "emoji", "char": "🤖", "x": 440, "y": 780, "size": 240, "t": 0.5, "t_end": 9.5, "anim": "float"},
+    {"type": "emoji", "char": "🪶", "x": 700, "y": 760, "size": 140, "t": 2.0, "t_end": 9.5, "anim": "wiggle"},
+    {"type": "meme", "tag": "feliz_perro", "x": 540, "y": 770, "size": 390, "t": 9.65, "rot": -3},
+    {"type": "meter", "x": 540, "y": 1130, "label": "sin retraso: casi nada", "t": 4.35, "from": 0, "to": 0.12, "t0": 5.45, "t1": 6.05, "color": "G"},
+    {"type": "meter", "x": 540, "y": 1310, "label": "con 0,2 s de retraso:", "t": 6.55, "from": 0, "to": 0.95, "t0": 7.0, "t1": 9.2, "color": "Y"},
+    {"type": "clock", "x": 240, "y": 1250, "t": 6.55},
+    {"type": "text", "text": "¡COSQUILLAS!", "size": 96, "color": "P", "x": 540, "y": 1460, "t": 9.65, "wobble": 6}
+  ]},
+  {"dur": 2.75, "elements": [
+    {"type": "emoji", "char": "😂", "x": 540, "y": 470, "size": 220, "t": 0.1, "anim": "shake"},
+    {"type": "words", "y": 760, "lines": [[["Un",80,"W",0.2],["dato",80,"W",0.35],["curioso",80,"C",0.5]],[["CADA",130,"Y",1.45],["DÍA",130,"Y",1.6]]]},
+    {"type": "button", "text": "SÍGUENOS", "x": 540, "y": 1050, "t": 1.95},
+    {"type": "confetti", "x": 540, "y": 1050, "t": 1.95}
+  ]}
+ ],
+ "sfx": [
+  {"name": "vine_boom", "t": 0.75, "vol": 0.55},
+  {"name": "huh_gato", "t": 10.9, "vol": 0.8},
+  {"name": "vine_boom", "t": 11.25, "vol": 0.6},
+  {"name": "boing", "t": 12.6, "vol": 0.5},
+  {"name": "risa_gato", "t": 24.1, "vol": 0.45, "trim": 2.2},
+  {"name": "ding", "t": 27.6, "vol": 0.55}
+ ]
+}

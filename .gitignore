@@ -1,0 +1,7 @@
+hoy/
+_work/
+__pycache__/
+*.tmp.mp4
+assets/memes/
+assets/sfx/
+test/*.mp3
