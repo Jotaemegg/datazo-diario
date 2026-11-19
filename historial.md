@@ -5,4 +5,4 @@
 2026-11-18 | El pulpo tiene tres corazones y sangre azul (hemocianina con cobre; el corazón principal se detiene al nadar) | Live Science, BBC Science Focus
 
 ## Metricool (uso del mes)
-- 2026-11: 10/20 usadas al 2026-11-18 (cosquillas, lluvia, cerebro y pulpo).
+- 2026-11: 9/20 usadas al 2026-11-18 (contador real de Metricool: 6 antes del pulpo + 3 del pulpo).
