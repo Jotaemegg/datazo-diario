@@ -512,9 +512,22 @@ def render_content(sc, t, gt):
 def prep_scenes(scenes):
     scenes[-1]["last"] = True
     for i, sc in enumerate(scenes):
-        sc.setdefault("in", "flash" if i == 0 else TRANS[(i - 1) % len(TRANS)])
+        sc.setdefault("in", "cut" if i == 0 else TRANS[(i - 1) % len(TRANS)])
     for i, sc in enumerate(scenes):
         sc["_prev"] = scenes[i - 1] if i > 0 else None
+    # PORTADA: el primer cuadro del video es la portada por defecto en TikTok/IG/YouTube.
+    # Todo lo que entra en el primer segundo de la escena 1 ya está completo en el cuadro 0.
+    hook = scenes[0]
+    if not hook.get("_hook_done") and hook.get("cover", True):
+        lim = hook.get("cover_until", 1.2)
+        for e in hook.get("elements", []):
+            if e.get("t", 0) <= lim: e["t"] = min(e.get("t", 0), 0) - 1.0
+            if e.get("type") == "words":
+                for ln in e["lines"]:
+                    for w in ln:
+                        if w[3] <= lim: w[3] = -1.0
+        hook.setdefault("punch", []).insert(0, 0.0)
+        hook["_hook_done"] = True
     return scenes
 
 def render_video(spec, out_video):

@@ -49,6 +49,14 @@ Antes del spec, escribe en `hoy/storyboard.md` una línea por escena:
 - Una sola idea por escena; una sola cosa se mueve "en grande" a la vez; el orden de entrada = orden de lectura.
 - Todo texto debe quedarse en pantalla al menos 1 s + 0.1 s por letra.
 
+### Portada (muy importante)
+El **cuadro 0 del video es la portada** por defecto en TikTok, Instagram y YouTube. El motor deja ya completo
+en el cuadro 0 todo lo que la escena 1 hace entrar en su primer 1.2 s. Por eso la escena 1 se diseña como portada:
+- Pregunta gancho de ≤ 8 palabras con **una palabra clave en `box`** (o slam) — tamaño 120–150.
+- Un elemento visual grande en el centro (emoji del tema y/o Inspector Bigotes) entre y≈700 y y≈1300.
+- Todo eso con `t` ≤ 1.2 (si necesitas otro límite: `"cover_until": X` en la escena).
+- Revisa `--preview 0` antes de renderizar: ese cuadro tiene que funcionar como miniatura.
+
 ## 6. Escribir `hoy/spec.json`
 Ver `test/spec.json` como ejemplo completo. Estructura:
 ```json
